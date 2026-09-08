@@ -3,6 +3,7 @@
 namespace CWP\Core\Extension;
 
 use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extension;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\LoginAttempt;
@@ -16,11 +17,26 @@ use SilverStripe\View\Requirements;
  */
 class LoginAttemptNotifications extends Extension
 {
+    use Configurable;
+
+    /**
+     * Whether CMS users are told about login attempts on their account since they last visited.
+     * Requires Security::login_recording as well, which this module leaves off by default.
+     *
+     * @config
+     * @var bool
+     */
+    private static $enabled = true;
+
     /**
      * @return mixed
      */
     public function init()
     {
+        if (!static::config()->get('enabled')) {
+            return;
+        }
+
         // Exclude default admin.
         $member = Security::getCurrentUser();
         if (!$member || !$member->ID) {

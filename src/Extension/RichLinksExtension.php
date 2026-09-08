@@ -2,6 +2,7 @@
 
 namespace CWP\Core\Extension;
 
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Assets\File;
@@ -19,6 +20,17 @@ use SilverStripe\ORM\FieldType\DBField;
  */
 class RichLinksExtension extends Extension
 {
+    use Configurable;
+
+    /**
+     * Whether $Content.RichLinks augments links. Turning it off makes RichLinks() return the
+     * content untouched, so templates calling it keep working.
+     *
+     * @config
+     * @var bool
+     */
+    private static $enabled = true;
+
     /**
      * @var array
      */
@@ -36,6 +48,10 @@ class RichLinksExtension extends Extension
         // in the same way coming from the CMS.
 
         $content = $this->owner->value;
+
+        if (!static::config()->get('enabled')) {
+            return $content;
+        }
 
         // Find all file links for processing.
         preg_match_all('/<a.*href="\[file_link,id=([0-9]+)\].*".*>.*<\/a>/U', $content ?? '', $matches);

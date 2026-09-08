@@ -15,6 +15,16 @@ class InitialisationMiddleware implements HTTPMiddleware
     use Configurable;
 
     /**
+     * Whether this middleware does anything at all. Turning it off skips the egress proxy setup,
+     * the X-XSS-Protection header and the Strict-Transport-Security header in one go, for projects
+     * that handle those elsewhere.
+     *
+     * @config
+     * @var bool
+     */
+    private static $enabled = true;
+
+    /**
      * Disable the automatically added 'X-XSS-Protection' header that is added to all responses. This should be left
      * alone in most circumstances to include the header. Refer to Mozilla Developer Network for more information:
      * https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection
@@ -80,6 +90,10 @@ class InitialisationMiddleware implements HTTPMiddleware
 
     public function process(HTTPRequest $request, callable $delegate)
     {
+        if (!$this->config()->get('enabled')) {
+            return $delegate($request);
+        }
+
         if ($this->config()->get('egress_proxy_default_enabled')) {
             $this->configureEgressProxy();
         }

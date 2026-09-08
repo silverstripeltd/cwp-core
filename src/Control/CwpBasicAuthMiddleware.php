@@ -3,11 +3,24 @@
 namespace CWP\Core\Control;
 
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Security\BasicAuthMiddleware;
 use SilverStripe\Security\PermissionProvider;
 
 class CwpBasicAuthMiddleware extends BasicAuthMiddleware implements PermissionProvider
 {
+    use Configurable;
+
+    /**
+     * Whether basic authentication is applied at all. This module turns basic authentication on for
+     * every route on test environments, which is what keeps a UAT site off the public internet.
+     * Turning this off removes that protection, including on UAT.
+     *
+     * @config
+     * @var bool
+     */
+    private static $enabled = true;
+
     /**
      * Whitelisted IP addresses will not be given a basic authentication prompt when other basic authentication
      * rules via {@link BasicAuthMiddleware} are enabled.
@@ -60,6 +73,12 @@ class CwpBasicAuthMiddleware extends BasicAuthMiddleware implements PermissionPr
      */
     protected function checkMatchingURL(HTTPRequest $request)
     {
+        // Null rather than false, so the URL patterns this module adds stop applying without also
+        // switching off BasicAuth.entire_site_protected, which a project sets for itself.
+        if (!$this->config()->get('enabled')) {
+            return null;
+        }
+
         if ($this->ipMatchesWhitelist()) {
             return false;
         }
