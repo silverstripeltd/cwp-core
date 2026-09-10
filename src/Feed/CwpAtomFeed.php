@@ -17,6 +17,16 @@ use SilverStripe\View\Requirements;
 
 class CwpAtomFeed extends RSSFeed
 {
+    /**
+     * Whether feeds built through this class are served as Atom. Turning it off falls back to the
+     * RSS template, link tag and content type from the parent class, so an existing controller
+     * action keeps returning a valid feed.
+     *
+     * @config
+     * @var bool
+     */
+    private static $enabled = true;
+
     public function __construct(
         SS_List $entries,
         $link,
@@ -39,7 +49,9 @@ class CwpAtomFeed extends RSSFeed
             $lastModified
         );
 
-        $this->setTemplate(__CLASS__);
+        // Templates are found by class hierarchy, so the Atom template would be picked up whether or
+        // not it is set here. Point the feed back at the framework's RSS template when disabled.
+        $this->setTemplate(static::config()->get('enabled') ? __CLASS__ : RSSFeed::class);
     }
 
     /**
@@ -50,6 +62,11 @@ class CwpAtomFeed extends RSSFeed
      */
     public static function linkToFeed($url, $title = null)
     {
+        if (!static::config()->get('enabled')) {
+            parent::linkToFeed($url, $title);
+            return;
+        }
+
         $title = Convert::raw2xml($title);
         Requirements::insertHeadTags(
             '<link rel="alternate" type="application/atom+xml" title="' . $title .
@@ -65,8 +82,11 @@ class CwpAtomFeed extends RSSFeed
     public function outputToBrowser()
     {
         $output = parent::outputToBrowser();
-        $response = Controller::curr()->getResponse();
-        $response->addHeader("Content-Type", "application/atom+xml");
+
+        if (static::config()->get('enabled')) {
+            $response = Controller::curr()->getResponse();
+            $response->addHeader("Content-Type", "application/atom+xml");
+        }
 
         return $output;
     }

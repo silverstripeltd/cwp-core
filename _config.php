@@ -9,6 +9,19 @@
  * and if absolutely necessary if you can't use the yml file, mysite/_config.php instead.
  */
 
+use CWP\Core\Config\CmsStylesConfig;
+use CWP\Core\Config\DocumentConverterConfig;
+use CWP\Core\Config\LocaleConfig;
+use CWP\Core\Config\LoggingConfig;
+use CWP\Core\Config\MemberSecurityConfig;
+use CWP\Core\Config\OEmbedConfig;
+use CWP\Core\Config\PasswordEncryptionConfig;
+use CWP\Core\Config\PasswordFieldConfig;
+use CWP\Core\Config\PasswordStrengthConfig;
+use CWP\Core\Config\QueuedJobsConfig;
+use CWP\Core\Config\SessionConfig;
+use CWP\Core\Config\SslConfig;
+use CWP\Core\Config\TextExtractionConfig;
 use SilverStripe\Core\Environment;
 use SilverStripe\HybridSessions\HybridSession;
 
@@ -25,3 +38,24 @@ if (Environment::getEnv('CWP_INSTANCE_DR_TYPE')
 ) {
     HybridSession::init(Environment::getEnv('SS_SESSION_KEY'));
 }
+
+/*
+ * Each feature this module applies can be switched off with `enabled: false`, listed together in
+ * _config/features.yml and documented in the README. Features backed by a class guard themselves;
+ * the ones below are plain configuration, so they get a class here that puts the configuration back
+ * when its flag is off. This runs after all YAML has loaded, which is the earliest point a flag can
+ * be read.
+ */
+CmsStylesConfig::apply();
+DocumentConverterConfig::apply();
+LocaleConfig::apply();
+LoggingConfig::apply();
+MemberSecurityConfig::apply();
+OEmbedConfig::apply();
+PasswordEncryptionConfig::apply();
+PasswordFieldConfig::apply();
+PasswordStrengthConfig::apply();
+QueuedJobsConfig::apply();
+SessionConfig::apply();
+SslConfig::apply();
+TextExtractionConfig::apply();

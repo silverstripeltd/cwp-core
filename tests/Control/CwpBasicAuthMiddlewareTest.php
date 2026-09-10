@@ -96,7 +96,7 @@ class CwpBasicAuthMiddlewareTest extends SapphireTest
     /**
      * @return array[]
      */
-    public function whitelistingProvider()
+    public static function whitelistingProvider()
     {
         return [
             'IP not in whitelist' => ['123.456.789.012', 401],
@@ -107,6 +107,32 @@ class CwpBasicAuthMiddlewareTest extends SapphireTest
     public function testMiddlewareProvidesUatServerPermissions()
     {
         $this->assertArrayHasKey('ACCESS_UAT_SERVER', $this->middleware->providePermissions());
+    }
+
+    public function testDisablingSkipsBasicAuthEntirely()
+    {
+        Config::modify()->set(CwpBasicAuthMiddleware::class, 'enabled', false);
+
+        // Basic auth would otherwise apply to every URL, and no credentials are supplied.
+        $this->middleware->setURLPatterns(['#.*#' => true]);
+        $_SERVER['REMOTE_ADDR'] = '123.456.789.012';
+
+        $this->assertSame(200, $this->mockRequest()->getStatusCode());
+    }
+
+    /**
+     * Disabling opts out of the URL patterns this module adds, not out of the framework's own
+     * site-wide setting, which a project turns on for itself.
+     */
+    public function testDisablingLeavesEntireSiteProtectedInPlace()
+    {
+        Config::modify()->set(CwpBasicAuthMiddleware::class, 'enabled', false);
+        Config::modify()->set(BasicAuth::class, 'entire_site_protected', true);
+
+        $this->middleware->setURLPatterns([]);
+        $_SERVER['REMOTE_ADDR'] = '123.456.789.012';
+
+        $this->assertSame(401, $this->mockRequest()->getStatusCode());
     }
 
     /**
