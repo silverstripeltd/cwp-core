@@ -96,7 +96,7 @@ class CwpBasicAuthMiddlewareTest extends SapphireTest
     /**
      * @return array[]
      */
-    public function whitelistingProvider()
+    public static function whitelistingProvider()
     {
         return [
             'IP not in whitelist' => ['123.456.789.012', 401],
