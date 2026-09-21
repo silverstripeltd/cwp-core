@@ -2,11 +2,7 @@
 Name: cwpcorefeatures
 ---
 # Every feature this module applies, and the flag that turns it off. Set any of these to false in
-# your project's YAML to opt out of that feature. See the README for what each one covers and what
-# the site falls back to.
-#
-# Flags are listed here rather than left to the defaults on each class so there is one place to see
-# what the module does.
+# your project's YAML. The README says what each one covers and what the site falls back to.
 
 # Egress proxy, X-XSS-Protection and Strict-Transport-Security headers
 CWP\Core\Control\InitialisationMiddleware:

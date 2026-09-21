@@ -10,19 +10,10 @@ use SilverStripe\Core\Injector\Injector;
 /**
  * Shared behaviour for every feature this module ships.
  *
- * Each class using this trait owns one feature, and each can be switched off from project YAML
- * with `enabled: false`. There is no central registry of flags:
- * a feature's flag lives on the class that owns the feature.
- *
- * The defaults themselves stay in this module's YAML rather than being written from `_config.php`.
- * YAML config from a project is loaded after a vendor module's, so a project that sets, say,
- * `SilverStripe\Control\Session.timeout` still wins. Config written from `_config.php` lands in a
- * higher priority layer than any YAML and would silently take that override away.
- *
- * That means a feature class only has work to do when its flag is off, at which point `apply()`
- * puts the affected config back. `restoreDefault()` only reverts a value that still matches what
- * this module set, so a project that both disables a feature and configures its own value keeps
- * that value.
+ * Each class using this trait owns one feature, switched off from project YAML with
+ * `enabled: false`. The feature's defaults live in this module's YAML; `apply()` only acts when
+ * the flag is off, putting the affected config back. Every revert first checks the value still
+ * matches what this module set, so a project's own value is left alone.
  */
 trait FeatureToggle
 {
@@ -156,13 +147,8 @@ trait FeatureToggle
 
     /**
      * Change one leaf of an Injector service definition, but only while that leaf still holds
-     * $moduleValue - the value this module's YAML sets for it. Anything else means a project or
-     * another module configured it deliberately, and that takes precedence over opting out here.
-     *
-     * Config written from _config.php lands in a delta layer above every YAML layer, and a delta
-     * replaces the value it is written over rather than peeling this module's contribution off it.
-     * That is why the caller passes the value to leave behind rather than the key simply being
-     * unset: unsetting is only correct where nothing underneath this module set the key.
+     * $moduleValue, the value this module's YAML sets for it. $drop unsets the leaf; otherwise it is
+     * set to $fallback, for services another module defines underneath this one.
      */
     private static function rewriteInjectorSpec(
         string $service,

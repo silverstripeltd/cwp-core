@@ -51,10 +51,8 @@ class SslConfig
             return;
         }
 
-        // ForceSSL with no patterns means every URL is redirected, so the patterns can only come
-        // off together with ForceSSL itself. Where ForceSSL is not the true this module sets - on
-        // dev, or because the project configured it - there is nothing here to switch off, and
-        // taking the patterns away on their own would force HTTPS more widely rather than less.
+        // ForceSSL with no patterns redirects every URL, so the patterns only come off together
+        // with the ForceSSL this module sets.
         if (static::injectorValue(CanonicalURLMiddleware::class, ['properties', 'ForceSSL']) !== true) {
             return;
         }

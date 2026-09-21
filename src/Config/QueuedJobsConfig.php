@@ -20,8 +20,7 @@ class QueuedJobsConfig
 
     /**
      * The runner this module configures, and the one symbiote/silverstripe-queuedjobs configures
-     * for itself. Disabling puts the module's own runner back: dropping the property outright
-     * would leave the service with no runner at all, and job processing would stop.
+     * for itself, which disabling puts back.
      *
      * @config
      */

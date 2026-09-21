@@ -28,9 +28,8 @@ class TextExtractionConfig
     private static string $cache_class = 'SilverStripe\TextExtraction\Cache\FileTextCache\Cache';
 
     /**
-     * The implementation silverstripe/textextraction points the cache service at, which is what
-     * disabling this feature has to put back. Dropping the service's `class` outright would leave
-     * nothing to build, because the service name is an interface.
+     * The implementation silverstripe/textextraction points the cache service at, which disabling
+     * puts back.
      *
      * @config
      */

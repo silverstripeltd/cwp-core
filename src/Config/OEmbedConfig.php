@@ -21,11 +21,8 @@ class OEmbedConfig
     private static string $client_service = 'Psr\Http\Client\ClientInterface.oembed';
 
     /**
-     * The proxy argument _config/oembed.yml sets, exactly as written there.
-     *
-     * Injector resolves the backticks to environment variables when it builds the service, in
-     * Injector::convertServiceProperty(). Nothing resolves them in the config layer, so this is
-     * also the value config reads back, and so the value to compare against when disabling.
+     * The proxy argument _config/oembed.yml sets, exactly as written there. Injector resolves the
+     * backticks when it builds the service, so this is also the value config reads back.
      *
      * @config
      */

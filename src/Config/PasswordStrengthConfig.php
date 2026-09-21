@@ -48,9 +48,6 @@ class PasswordStrengthConfig
             static::dropInjectorProperty(PasswordValidator::class, $property, $moduleValue);
         }
 
-        // Only hand the service back to the framework's own validator while it still points at the
-        // one this module set. A project that disables the NZISM rules to configure a validator of
-        // its own keeps it.
         static::restoreInjectorKey(
             PasswordValidator::class,
             'class',
