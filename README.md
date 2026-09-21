@@ -50,10 +50,6 @@ A value your project has already set is left alone, so you can disable a feature
 | Text extraction from uploaded files | `CWP\Core\Config\TextExtractionConfig` | Files are no longer text extractable, and the extraction cache returns to that module's default. |
 | Word document import on pages | `CWP\Core\Config\DocumentConverterConfig` | The document import is removed from the page edit form. |
 
-Four of these carry security consequences worth calling out. Disabling `CwpBasicAuthMiddleware` exposes a UAT site to anyone who finds its URL, which is the usual reason a pre-launch site stays private. Disabling `SslConfig` means a login form can be submitted over plain HTTP. Disabling `PasswordStrengthConfig` or `MemberSecurityConfig` drops the NZISM password and lockout controls that most public sector projects are assessed against.
-
-Two settings this module applies carry no flag, because both match the framework default and there is nothing to switch off: `HTMLEditorField.sanitise_server_side` in `_config/editor.yml`, and `Session.cookie_secure` on non-dev environments in `_config/live-config.yml`. Both are ordinary config, so a project can still set its own value in YAML.
-
 ### Settings within a feature
 
 Some features have further settings beyond their flag. These are listed below.
