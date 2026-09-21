@@ -5,8 +5,7 @@ namespace CWP\Core\Config;
 use SilverStripe\i18n\i18n;
 
 /**
- * Sets the site locale to en_GB, which drives date formatting and the locale dropdowns. There is no
- * English (New Zealand) option, and en_GB is the closest match for NZ government sites.
+ * Sets the site locale to en_GB, which drives date formatting and the locale dropdowns.
  *
  * Applied in _config/config.yml. Disabling restores the framework default of en_US.
  */
