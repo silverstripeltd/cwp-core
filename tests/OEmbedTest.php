@@ -20,7 +20,6 @@ class OEmbedTest extends SapphireTest
     {
         $reflClass = new \ReflectionClass(Crawler::class);
         $reflProperty = $reflClass->getProperty('client');
-        $reflProperty->setAccessible(true);
         $crawler = Injector::inst()->get(Crawler::class);
         $client = $reflProperty->getValue($crawler);
         $this->assertSame(Client::class, get_class($client));
