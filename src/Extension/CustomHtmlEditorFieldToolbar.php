@@ -9,10 +9,7 @@ use SilverStripe\View\Requirements;
 /**
  * Adds the CWP JavaScript to the CMS insert media form.
  *
- * This extension is not applied anywhere and carries no feature flag. `HtmlEditorField_Toolbar`, the
- * class it extended, was removed in CMS 6 along with the `updateMediaForm` hook, so there is no
- * behaviour for a flag to switch off. Whether it can be ported to the CMS 6 media form is part of
- * the upgrade rather than of feature flagging.
+ * Not applied anywhere: `HtmlEditorField_Toolbar` does not exist in CMS 6.
  *
  * @extends Extension<\HtmlEditorField_Toolbar>
  */
