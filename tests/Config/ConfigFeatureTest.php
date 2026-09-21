@@ -161,6 +161,23 @@ class ConfigFeatureTest extends SapphireTest
     }
 
     /**
+     * The redirect domain is stored as an unresolved backtick string, so it has to be matched as one.
+     */
+    public function testDisablingSslConfigDropsTheSecureDomain()
+    {
+        Config::modify()->set(SslConfig::class, 'enabled', false);
+        $this->forceSslOn();
+        Config::modify()->merge(Injector::class, CanonicalURLMiddleware::class, [
+            'properties' => ['ForceSSLDomain' => '`CWP_SECURE_DOMAIN`'],
+        ]);
+        SslConfig::apply();
+
+        $spec = Config::inst()->get(Injector::class, CanonicalURLMiddleware::class);
+
+        $this->assertArrayNotHasKey('ForceSSLDomain', $spec['properties']);
+    }
+
+    /**
      * ForceSSL with no patterns redirects every URL rather than none, so the patterns can only be
      * taken away together with ForceSSL itself.
      */

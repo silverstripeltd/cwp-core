@@ -2,7 +2,7 @@
 
 namespace CWP\Core\Extension;
 
-use SilverStripe\Core\Config\Configurable;
+use CWP\Core\Config\FeatureToggle;
 use SilverStripe\Core\Extension;
 use SilverStripe\Security\Group;
 
@@ -11,16 +11,8 @@ use SilverStripe\Security\Group;
  */
 class CwpHtmlEditorConfig extends Extension
 {
-    use Configurable;
+    use FeatureToggle;
 
-    /**
-     * Whether groups without an explicit HTML editor configuration fall back to the 'cwp' config
-     * rather than the CMS default. Turning it off returns those groups to the CMS default.
-     *
-     * @config
-     * @var bool
-     */
-    private static $enabled = true;
 
     /**
      * @return string|null
@@ -36,7 +28,7 @@ class CwpHtmlEditorConfig extends Extension
             return $originalConfig;
         }
 
-        if (!static::config()->get('enabled')) {
+        if (!static::isEnabled()) {
             return null;
         }
 

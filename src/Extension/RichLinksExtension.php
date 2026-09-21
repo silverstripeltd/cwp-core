@@ -2,7 +2,7 @@
 
 namespace CWP\Core\Extension;
 
-use SilverStripe\Core\Config\Configurable;
+use CWP\Core\Config\FeatureToggle;
 use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Assets\File;
@@ -20,16 +20,8 @@ use SilverStripe\ORM\FieldType\DBField;
  */
 class RichLinksExtension extends Extension
 {
-    use Configurable;
+    use FeatureToggle;
 
-    /**
-     * Whether $Content.RichLinks augments links. Turning it off makes RichLinks() return the
-     * content untouched, so templates calling it keep working.
-     *
-     * @config
-     * @var bool
-     */
-    private static $enabled = true;
 
     /**
      * @var array
@@ -49,7 +41,7 @@ class RichLinksExtension extends Extension
 
         $content = $this->owner->value;
 
-        if (!static::config()->get('enabled')) {
+        if (!static::isEnabled()) {
             return $content;
         }
 

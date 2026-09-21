@@ -8,10 +8,10 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
 
 /**
- * Shared behaviour for the feature classes in {@see CWP\Core\Config}.
+ * Shared behaviour for every feature this module ships.
  *
- * Each of those classes owns one group of the opinionated defaults this module ships, and each can
- * be switched off from project YAML with `enabled: false`. There is no central registry of flags:
+ * Each class using this trait owns one feature, and each can be switched off from project YAML
+ * with `enabled: false`. There is no central registry of flags:
  * a feature's flag lives on the class that owns the feature.
  *
  * The defaults themselves stay in this module's YAML rather than being written from `_config.php`.

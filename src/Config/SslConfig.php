@@ -3,7 +3,6 @@
 namespace CWP\Core\Config;
 
 use SilverStripe\Control\Middleware\CanonicalURLMiddleware;
-use SilverStripe\Core\Environment;
 
 /**
  * Redirects the login and API URL patterns to HTTPS on test and live environments, and sends the
@@ -38,6 +37,14 @@ class SslConfig
         'test',
     ];
 
+    /**
+     * The redirect domain _config/security.yml sets, exactly as written there. Injector resolves the
+     * backticks when it builds the middleware, so this is also the value config reads back.
+     *
+     * @config
+     */
+    private static string $secure_domain = '`CWP_SECURE_DOMAIN`';
+
     public static function apply(): void
     {
         if (static::isEnabled()) {
@@ -66,7 +73,7 @@ class SslConfig
         static::dropInjectorProperty(
             CanonicalURLMiddleware::class,
             'ForceSSLDomain',
-            Environment::getEnv('CWP_SECURE_DOMAIN')
+            static::config()->get('secure_domain')
         );
     }
 }
